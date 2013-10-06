@@ -30,7 +30,7 @@ And add the following lines (dont forget to also setup your database settings).
 
 Navigate to `setup.php` to create the database and its content.
 
-Navigate to `index.php?q=account` and login using `admin`, `admin` as login and password.
+Navigate to `index.php?q=account` and login using `admin@example.com`, `admin` as login and password, respectively.
 
 ## Licence
 

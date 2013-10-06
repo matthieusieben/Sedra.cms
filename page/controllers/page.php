@@ -4,7 +4,7 @@ require_once 'includes/file.php';
 require_once 'includes/menu.php';
 require_once 'includes/theme.php';
 
-$page_id = @$arg[1];
+$page_id = @$arg[0];
 
 # Get the item
 $query = db_select('pages', 'p')->condition('id', $page_id);
@@ -15,14 +15,14 @@ $page = $query->execute()->fetchAssoc();
 if(empty($page))
 	show_404();
 
-switch (@$arg[0]) {
+switch (@$arg[1]) {
 case 'raw':
 	# Show the raw page content
 	return theme('page/page', array(
 		'page' => $page,
 	));
 
-case 'page':
+default:
 	# Add breadcrumb
 	breadcrumb_add(array(
 		'path' => 'page/'.$page['id'],
@@ -34,7 +34,4 @@ case 'page':
 		'view' => 'page/page',
 		'page' => $page,
 	));
-
-default:
-	throw new FrameworkException(t('Undefined request <code>@request</code>', array('@request' => @$arg[0])), 500);
 }

@@ -25,7 +25,7 @@ $article['file_info'] = file_info(array('fid' => $article['picture']));
 
 # Add breadcrumb
 breadcrumb_add(array(
-	'path' => 'blog/index',
+	'path' => 'blog',
 	'title' => t('Blog'),
 ));
 breadcrumb_add(array(

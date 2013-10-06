@@ -10,9 +10,9 @@ hook_register('site data', function(&$__data) {
 
 	default:
 		if($language === 'en')
-			$__data['aside'] = load_controller('page', array('raw', 4));
+			$__data['aside'] = load_controller('page', array(4, 'raw'));
 		else if($language === 'fr')
-			$__data['aside'] = load_controller('page', array('raw', 5));
+			$__data['aside'] = load_controller('page', array(5, 'raw'));
 		break;
 	}
 });
