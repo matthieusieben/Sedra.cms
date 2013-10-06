@@ -2,8 +2,5 @@
 *.DS_Store
 *.bak
 .git
-application/settings.php
-private/logs/*
-index.php
-setup.php
-framework/*
+settings.php
+settings.example.php
