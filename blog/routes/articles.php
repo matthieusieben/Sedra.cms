@@ -1,17 +1,17 @@
 <?php
 
 $routes['blog_category'] = array(
-	'url' => 'blog/category/(?<cat>\d+)',
+	'url' => 'blog/category/:cat',
 	'controller' => 'blog/articles',
 	'methods' => array('GET'),
-	'args' => array('$cat'),
+	'args' => array(':cat'),
 );
 
 $routes['blog_category_rss'] = array(
-	'url' => 'blog/category/(?<cat>\d+)\.rss',
+	'url' => 'blog/category/:cat.rss',
 	'controller' => 'blog/rss',
 	'methods' => array('GET'),
-	'args' => array('$cat'),
+	'args' => array(':cat'),
 );
 
 $routes['blog_index'] = array(
@@ -21,7 +21,7 @@ $routes['blog_index'] = array(
 );
 
 $routes['blog_index_rss'] = array(
-	'url' => 'blog\.rss',
+	'url' => 'blog.rss',
 	'controller' => 'blog/rss',
 	'methods' => array('GET'),
 );

@@ -5,7 +5,7 @@ require_once 'includes/menu.php';
 require_once 'includes/pagination.php';
 require_once 'includes/theme.php';
 
-$category = @$arg[0];
+$category = is_numeric(@$arg[0]) ? intval($arg[0]) : NULL;
 $page = val($_GET['page'], 0);
 $limit = val($_GET['limit'], 5);
 
@@ -19,7 +19,8 @@ $query->addField('u', 'mail');
 $query->addField('c', 'id', 'category_id');
 $query->addField('c', 'name', 'category_name');
 $query->range($page*$limit, $limit);
-if($category) $query->condition('a.category', $category);
+$query->condition('published', date("Y-m-d H:i:s"), '<');
+if(isset($category)) $query->condition('a.category', $category);
 
 $result = $query->execute();
 while($article = $result->fetchAssoc()) {
@@ -41,7 +42,8 @@ default:
 	$count = count($articles);
 	if($count >= $limit || $page !== 0) {
 		$cq = db_select('articles');
-		if($category) $cq->condition('a.category', $category);
+	$query->condition('published', date("Y-m-d H:i:s"), '<');
+		if(isset($category)) $cq->condition('a.category', $category);
 		$count = $cq->countQuery()->execute()->fetchField();
 	}
 
@@ -49,11 +51,14 @@ default:
 		'path' => router_create_path('blog_index'),
 		'title' => t('Blog'),
 	));
-	if($category)
-	breadcrumb_add(array(
-		'path' => router_create_path('blog_category', array('cat' => $category)),
-		'title' => $articles[0]['category_name'],
-	));
+	if(isset($category)) {
+		$category_name = @$articles[0]['category_name'] ?: db_select('category', 'c')->fields('c', array('name'))->condition('id', $category)->execute()->fetchField();
+
+		breadcrumb_add(array(
+			'path' => router_create_path('blog_category', array('cat' => $category)),
+			'title' => $category_name,
+		));
+	}
 
 	return theme('blog/list', array(
 		'title' => t('Blog'),
