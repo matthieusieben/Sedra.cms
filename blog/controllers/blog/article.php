@@ -1,28 +1,14 @@
 <?php
 
-require_once 'includes/file.php';
 require_once 'includes/menu.php';
 require_once 'includes/theme.php';
-
-$article_id = @$arg[0];
+require_once 'models/blog.php';
 
 # Get the item
-$query = db_select('articles', 'a')->condition('a.id', $article_id);
-$query->leftJoin('users', 'u', 'u.uid = a.uid');
-$query->leftJoin('category', 'c', 'c.id = a.category');
-$query->fields('a');
-$query->addField('u', 'name', 'author');
-$query->addField('u', 'mail');
-$query->addField('c', 'id', 'category_id');
-$query->addField('c', 'name', 'category_name');
-$query->condition('published', date("Y-m-d H:i:s"), '<');
-$article = $query->execute()->fetchAssoc();
+$article = blog_get_article_by_id($args['id']);
 
 # Item not found
-if(empty($article))
-	show_404();
-
-$article['file_info'] = file_info(array('fid' => $article['picture']));
+if(!$article) show_404();
 
 # Add breadcrumb
 breadcrumb_add(array(
@@ -41,4 +27,4 @@ breadcrumb_add(array(
 ));
 
 # Show the item
-return theme('blog/article', array('article' => $article));
+return theme('blog/page/article', $article);

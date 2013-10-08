@@ -1,4 +1,4 @@
-<article role="article">
+<article role="article" class="page">
 	<header>
 		<h1><?php echo check_plain($page['title']) ?></h1>
 	</header>

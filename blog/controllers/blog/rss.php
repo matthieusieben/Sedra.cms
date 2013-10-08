@@ -1,8 +1,9 @@
 <?php
 
+require_once 'models/blog.php';
 require_once 'libraries/FeedWriter/FeedTypes.php';
 
-switch (@$arg[2]) {
+switch (@$_GET['output']) {
 case '':
 case 'atom':
 	$BlogFeed = new ATOMFeedWriter;
@@ -21,18 +22,22 @@ default:
 	return show_404();
 }
 
-$BlogFeed->setTitle(t('@site blog', array('@site' => config('site.name'))));
-$BlogFeed->setLink(url('blog'));
-$BlogFeed->setDescription(t('This is the RSS feed of @site blog.', array('@site' => config('site.name'))));
+$category = $args['category'];
 
-$query = db_select('articles', 'a')->orderBy('published', 'DESC');
-$query->fields('a');
-$query->leftJoin('users', 'u', 'u.uid = a.uid');
-$query->addField('u', 'name', 'author');
-$query->range(0, 10);
+list($articles, $count, $category_name) = blog_get_articles_by_category($category, 0, 10);
 
-$result = $query->execute();
-while($article = $result->fetchAssoc()) {
+if(isset($category) && !$category_name)
+	return show_404();
+
+$BlogFeed->setTitle(t('@site\'s blog', array('@site' => config('site.name'))));
+$BlogFeed->setLink(router_url('blog_index'));
+if($category) {
+	$BlogFeed->setDescription(t('RSS feed of @site\'s "@category" blog.', array('@site' => config('site.name'), '@category' => $category_name)));
+} else {
+	$BlogFeed->setDescription(t('RSS feed of @site\'s blog.', array('@site' => config('site.name'))));
+}
+
+foreach ($articles as $article) {
 	$newItem = $BlogFeed->createNewItem();
 	$newItem->setTitle($article['title']);
 	$newItem->setAuthor($article['author']);

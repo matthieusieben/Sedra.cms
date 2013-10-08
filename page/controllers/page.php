@@ -4,7 +4,7 @@ require_once 'includes/file.php';
 require_once 'includes/menu.php';
 require_once 'includes/theme.php';
 
-$page_id = @$arg[0];
+$page_id = $args['id'];
 
 # Get the item
 $query = db_select('pages', 'p')->condition('id', $page_id);
@@ -15,7 +15,7 @@ $page = $query->execute()->fetchAssoc();
 if(empty($page))
 	show_404();
 
-switch (@$arg[1]) {
+switch (@$args['theme']) {
 case 'raw':
 	# Show the raw page content
 	return theme('page/page', array(
